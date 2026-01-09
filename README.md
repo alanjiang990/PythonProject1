@@ -1,110 +1,41 @@
-# 📡 Trajectory Tracking & Analytics System
-### 軌跡追蹤與分析系統
+# 📡 Trajectory Analysis System
+### 即時軌跡監控與歷史數據分析平台
 
-> **System Overview**
-> 本專案包含兩大核心模組：**即時監控 (Real-time Monitor)** 與 **歷史分析 (History Analytics)**。
-> 介面採用現代化深色風格 (Dark Theme)，專為長時間監控與數據分析設計。
+![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
+![PyQt6](https://img.shields.io/badge/GUI-PyQt6-41CD52?logo=qt&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&logoColor=white)
+
+> **Overview**
+> 本專案是一套專為室內定位設計的視覺化系統，包含 **即時監控** 與 **歷史回放** 兩大模組。
+> 介面採用現代化深色風格 (Dark Theme)，優化長時間監控的視覺體驗，並整合 Matplotlib 進行高精度繪圖。
 
 ---
 
-## 🛠️ 環境需求 (Prerequisites)
+## 📸 System Preview (系統預覽)
 
-請確保已安裝 Python 3.8+ 以及以下必要套件：
+| **Real-time Monitor (即時監控)** | **History Analytics (歷史分析)** |
+|:---:|:---:|
+| <img src="放入你的截圖1.png" width="400"/> | <img src="放入你的截圖2.png" width="400"/> |
+| *即時顯示多目標軌跡與特殊點位* | *時間軸回放與多玩家數據篩選* |
+
+---
+
+## 🛠️ Installation (安裝需求)
+
+確保已安裝 Python 3.8+，並執行以下指令安裝依賴套件：
 
 ```bash
 pip install PyQt6 pandas matplotlib numpy
-(註：sqlite3 為 Python 內建標準庫，無須額外安裝)
-
-🚀 1. 即時監控系統 (Real-time Monitor)
-程式入口: gui_realtime.py (假設檔案名稱)
-
-此模組負責接收感測器數據，並即時繪製玩家/物件的移動軌跡。
-
-🎮 介面功能說明 (Interface Guide)
-左側：控制面板 (Control Panel)
-所有操作均集中於左側深色面板，由上而下功能如下：
-
-🗺️ 地圖設定 (Map Settings)
-
-瀏覽 (Browse): 點擊載入場域平面圖 (.png, .jpg)。
-
-系統會自動將圖片疊加於座標系底層 (預設範圍 0-100)。
-
-⭐ 特殊點設定 (Special Points)
-
-瀏覽 (Browse): 載入標註重要位置的 CSV 檔案 (格式需包含 x, y 欄位)。
-
-顯示核取方塊: 可隨時開啟或關閉特殊點的顯示。
-
-⚙️ 顯示參數 (Display Params)
-
-軌跡保留點數: 設定畫面上的「貪食蛇」長度。
-
-數值越小：畫面越簡潔，僅顯示最新位置。
-
-數值越大：顯示較長的歷史路徑。
-
-👥 玩家列表 (Player List)
-
-ID / 名稱: 表格顯示偵測到的玩家 ID。
-
-自訂名稱: 點擊「名稱」欄位可直接修改 (例如將 Player 1 改為 Target Alpha)，系統會自動記憶。
-
-勾選過濾: 取消勾選可暫時隱藏特定玩家的軌跡。
-
-▶️ 開始監控 (Start Button)
-
-藍色按鈕。點擊後系統開始寫入 Session 並即時更新畫面。
-
-右側：視覺化區域 (Visualizer)
-深色畫布: 採用 #1e1e1e 背景，減少螢幕眩光。
-
-動態繪圖: 自動更新最新位置、繪製移動路徑，並以不同顏色區分玩家。
-
-📈 2. 歷史軌跡分析系統 (History Analytics)
-程式入口: gui_history.py (假設檔案名稱)
-
-此模組用於回放與深度分析過去的錄製資料。
-
-🔍 介面功能說明
-Session Selector (場次選擇)
-
-從下拉選單選擇歷史錄製時段 (包含日期與 Session ID)。
-
-Player Filter (玩家篩選)
-
-支援多選。選擇該場次中想關注的特定目標。
-
-同樣支援讀取/寫入自訂名稱記憶。
-
-Data Loading (載入資料)
-
-點擊 LOAD DATA 後，系統會從資料庫撈取符合條件的點位。
-
-Time Slider (時間軸滑桿)
-
-位於底部。拖動雙向滑桿可限縮時間範圍 (例如：只看前 10 分鐘的軌跡)。
-
-上方會即時顯示選取區間的 Start Time 與 End Time。
-
-📂 檔案結構 (File Structure)
-Plaintext
-
-Project/
-├── history_records.db     # [Core] 儲存所有軌跡與場次數據的資料庫
-├── player_settings.json   # [Config] 儲存玩家自訂名稱與顯示設定
-├── gui_realtime.py        # [App] 即時監控主程式
-├── gui_history.py         # [App] 歷史分析主程式
-├── backend_logic.py       # [Logic] 後端運算與資料庫寫入邏輯
-├── init_point.csv         # [Config] 基站座標設定
-└── assets/                # 存放底圖或圖標
-📝 CSV 格式規範
-若需匯入 特殊點 (Special Points)，CSV 檔案內容請參照以下格式：
-
-程式碼片段
-
-name,x,y
-Point A,10.5,20.0
-Point B,50.0,50.0
-Danger Zone,85.2,90.1
-Note: 系統預設使用 SQLite WAL 模式以支援高頻率讀寫。若直接移動 .db 檔案，請確保連同 .db-shm 與 .db-wal 一併移動，或在程式完全關閉後再進行操作。
+(資料庫使用內建 SQLite3，無須額外安裝)🚀 Module 1: Real-time Monitor (即時監控)Script: gui_realtime.py此模組負責接收感測器數據 (Sensor Data)，並即時將座標繪製於畫布上。🎮 Control Panel (左側控制面板)區塊功能說明🗺️ 地圖設定瀏覽底圖：支援載入 .png/.jpg 平面圖，自動疊加於座標系底層 (預設 0-100)。⭐ 特殊點設定載入 CSV：標記場域內的危險區或重要地標。顯示開關：可隨時隱藏或顯示特殊點圖層。⚙️ 顯示參數軌跡保留點數：控制「貪食蛇」長度。• Low (5-10): 畫面簡潔，僅關注當下。• High (50+): 顯示完整移動路徑。👥 玩家列表即時狀態：顯示偵測到的 ID。自訂名稱：點擊名稱欄位可直接修改 (如 Target A)，系統自動記憶。勾選過濾：取消勾選可隱藏特定目標。📈 Module 2: History Analytics (歷史分析)Script: gui_history.py此模組用於回放過去的錄製資料，支援時間軸切片與多目標交叉分析。🔍 Core Features (核心功能)📅 Session Selector (場次選擇)自動列出所有錄製時段 (Time + SessionID)。支援快速切換不同測試場次。🔍 Advanced Filtering (進階篩選)Player Filter: 支援多選，僅查看特定目標的互動。Auto-Save: 玩家的改名紀錄會同步儲存至 json 檔。⏱️ Time Slider (時間軸滑桿)雙向滑桿: 位於底部面板。可拖曳 Start 與 End 端點，精準限縮觀察的時間區間 (例如：只看發生異常的那 30 秒)。📂 File Structure (檔案結構)PlaintextProject Root/
+├── 📂 assets/              # 存放底圖資源
+├── 📜 gui_realtime.py      # [APP] 即時監控主程式
+├── 📜 gui_history.py       # [APP] 歷史分析主程式
+├── 📜 backend_logic.py     # [Logic] 定位演算與 DB 寫入
+├── 🗃️ history_records.db   # [Data] 軌跡數據庫 (SQLite)
+├── ⚙️ player_settings.json # [Config] 玩家名稱記憶檔
+└── 📄 README.md            # 說明文件
+📝 Appendix: CSV Format若需匯入 特殊點 (Special Points)，請使用以下 CSV 格式：程式碼片段name, x, y
+Base Station A, 10.5, 20.0
+Obstacle 1, 50.0, 50.0
+Exit, 95.0, 95.0
+Note for Developers系統預設背景色為 #1e1e1e (Dark Grey)。資料庫建議開啟 WAL 模式以獲得最佳寫入效能。
